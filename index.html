@@ -14,13 +14,21 @@
     body {
       font-family: 'Segoe UI', sans-serif;
       background: #fdf6e3;
-      text-align: center;
       margin: 0;
       padding: 0;
     }
+    header {
+      background: linear-gradient(135deg, #4caf50, #2e7d32);
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
     .imagem-topo {
       width: 100%;
-      max-width: 600px;   /* ajusta para telas grandes */
+      max-width: 600px;
       margin: 20px auto;
       display: block;
       border-radius: 12px;
@@ -30,113 +38,5 @@
       background: #fffdf5;
       padding: 20px;
       margin: 20px auto;
-      width: 95%;          /* ocupa quase toda a tela */
-      max-width: 500px;    /* limite em telas grandes */
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    h2, h3 {
-      margin-top: 0;
-      border-bottom: 2px solid #ccc;
-    }
-    .task {
-      display: flex;
-      justify-content: space-between;
-      margin: 10px 0;
-      font-size: 1.2em;   /* tamanho relativo */
-      border-bottom: 1px dashed #aaa;
-    }
-    button {
-      padding: 0.5em 1em;
-      font-size: 1em;
-      border-radius: 6px;
-      border: none;
-      background: #4caf50;
-      color: #fff;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #45a049;
-    }
-    .count {
-      font-weight: bold;
-    }
-    .result {
-      font-size: 1.2em;
-      margin-top: 15px;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Imagem de capa -->
-  <img src="imagem-maior.png" alt="Imagem de capa" class="imagem-topo">
-
-  <div class="container" id="capture">
-    <h2>TASK</h2>
-    <div class="task">CERVEJA <span class="count" id="c1">0</span> <button onclick="add('c1',true)">+</button></div>
-    <div class="task">NAB <span class="count" id="c2">0</span> <button onclick="add('c2',true)">+</button></div>
-    <div class="task">MARKET <span class="count" id="c3">0</span> <button onclick="add('c3',true)">+</button></div>
-    <div class="task">VOLUME <span class="count" id="c4">0</span> <button onclick="add('c4',true)">+</button></div>
-
-    <h3>DESAFIO DO DIA</h3>
-    <div class="task">TASK (meta 35) <span class="count" id="c5">0</span></div>
-    <div class="task">MISSÃO (meta 10) <span class="count" id="c6">0</span> <button onclick="add('c6')">+</button></div>
-    <div class="task">DESAFIOS (meta 10) <span class="count" id="c7">0</span> <button onclick="add('c7')">+</button></div>
-
-    <div class="result" id="resultado"></div>
-
-    <button onclick="reset()">Resetar</button>
-    <button onclick="checkGoals()">Finalizar Dia</button>
-  </div>
-
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-  <script>
-    const metas = { c5:35, c6:10, c7:10 };
-
-    function add(id, somaTask=false){
-      let el = document.getElementById(id);
-      let val = parseInt(el.innerText) + 1;
-      el.innerText = val;
-      if(somaTask) {
-        let taskEl = document.getElementById("c5");
-        taskEl.innerText = parseInt(taskEl.innerText) + 1;
-      }
-    }
-
-    function reset(){
-      ["c1","c2","c3","c4","c5","c6","c7"].forEach(id=>{
-        document.getElementById(id).innerText = 0;
-      });
-      document.getElementById("resultado").innerText = "";
-    }
-
-    function checkGoals(){
-      let res = "";
-      res += "TASK: " + (parseInt(document.getElementById("c5").innerText)>=metas.c5 ? "✅" : "❌") + "<br>";
-      res += "MISSÃO: " + (parseInt(document.getElementById("c6").innerText)>=metas.c6 ? "✅" : "❌") + "<br>";
-      res += "DESAFIOS: " + (parseInt(document.getElementById("c7").innerText)>=metas.c7 ? "✅" : "❌") + "<br>";
-      res += "<br><button onclick='saveImage()'>Gerar Imagem</button>";
-      document.getElementById("resultado").innerHTML = res;
-    }
-
-    function saveImage(){
-      html2canvas(document.getElementById("capture")).then(canvas=>{
-        let link = document.createElement('a');
-        link.download = 'relatorio.png';
-        link.href = canvas.toDataURL();
-        link.click();
-      });
-    }
-
-    // lembrete às 16h
-    setInterval(()=>{
-      let agora = new Date();
-      if(agora.getHours()===16 && agora.getMinutes()===0){
-        alert("Hora de revisar seus desafios do dia!");
-      }
-    },60000);
-  </script>
-
-</body>
-</html>
+      width: 95%;
+      max-width: 500px
