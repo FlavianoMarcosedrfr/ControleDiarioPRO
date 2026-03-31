@@ -16,6 +16,7 @@
       background: #fdf6e3;
       margin: 0;
       padding: 0;
+      transition: background 0.3s, color 0.3s;
     }
     header {
       background: linear-gradient(135deg, #4caf50, #2e7d32);
@@ -24,19 +25,179 @@
       text-align: center;
       font-size: 1.5em;
       font-weight: bold;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     .imagem-topo {
       width: 100%;
-      max-width: 600px;
-      margin: 20px auto;
+      height: auto;
       display: block;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     .container {
       background: #fffdf5;
       padding: 20px;
-      margin: 20px auto;
-      width: 95%;
-      max-width: 500px
+      margin: 10px auto;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    h2, h3 {
+      margin-top: 0;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 5px;
+    }
+    .task {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+      font-size: 1.3em;
+      border-bottom: 1px dashed #aaa;
+      padding: 5px 0;
+    }
+    button {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, #4caf50, #2e7d32);
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #66bb6a, #388e3c);
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .buttons button {
+      flex: 1;
+      margin: 0 5px;
+    }
+    .result {
+      font-size: 1.2em;
+      margin: 15px 0;
+      padding: 10px;
+      background: #f0f8ff;
+      border-radius: 8px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    }
+    /* Dark mode */
+    .dark-mode {
+      background: #121212;
+      color: #e0e0e0;
+    }
+    .dark-mode .container {
+      background: #1e1e1e;
+      color: #e0e0e0;
+    }
+    .dark-mode header {
+      background: linear-gradient(135deg, #333, #111);
+    }
+    .dark-mode .result {
+      background: #2a2a2a;
+    }
+  </style>
+</head>
+<body>
+
+  <header>📋 Controle Diário PRO</header>
+
+  <!-- Botão Dark Mode -->
+  <div style="text-align:center; margin:10px;">
+    <button onclick="toggleDarkMode()">🌙 Alternar Modo</button>
+  </div>
+
+  <!-- Imagem de capa -->
+  <img src="imagem-maior.png" alt="Imagem de capa" class="imagem-topo">
+
+  <div class="container" id="capture">
+    <h2>✅ TASK</h2>
+    <div class="task">🍺 CERVEJA <span class="count" id="c1">0</span> <button onclick="add('c1',true)">+</button></div>
+    <div class="task">📦 NAB <span class="count" id="c2">0</span> <button onclick="add('c2',true)">+</button></div>
+    <div class="task">🛒 MARKET <span class="count" id="c3">0</span> <button onclick="add('c3',true)">+</button></div>
+    <div class="task">📊 VOLUME <span class="count" id="c4">0</span> <button onclick="add('c4',true)">+</button></div>
+
+    <h3>🎯 DESAFIO DO DIA</h3>
+    <div class="task">TASK (meta 35) <span class="count" id="c5">0</span></div>
+    <div class="task">MISSÃO (meta 10) <span class="count" id="c6">0</span> <button onclick="add('c6')">+</button></div>
+    <div class="task">DESAFIOS (meta 10) <span class="count" id="c7">0</span> <button onclick="add('c7')">+</button></div>
+
+    <div class="result" id="resultado">Status do dia aparecerá aqui...</div>
+  </div>
+
+  <!-- Parciais -->
+  <div class="container">
+    <h3>📊 Parciais</h3>
+    <button onclick="salvarParcial('12h')">Salvar 12h</button>
+    <button onclick="salvarParcial('15h')">Salvar 15h</button>
+    <button onclick="salvarParcial('Fechamento')">Salvar Fechamento</button>
+    <div id="resumoParciais"></div>
+  </div>
+
+  <!-- Barra de botões -->
+  <div class="buttons">
+    <button onclick="reset()">🔄 Resetar</button>
+    <button onclick="checkGoals()">🏁 Finalizar Dia</button>
+    <button onclick="mostrarGrafico()">📈 Ver Gráfico</button>
+  </div>
+
+  <canvas id="graficoTarefas" style="max-width:100%; margin:20px auto; display:block;"></canvas>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const metas = { c5:35, c6:10, c7:10 };
+
+    function add(id, somaTask=false){
+      let el = document.getElementById(id);
+      let val = parseInt(el.innerText) + 1;
+      el.innerText = val;
+      if(somaTask) {
+        let taskEl = document.getElementById("c5");
+        taskEl.innerText = parseInt(taskEl.innerText) + 1;
+      }
+    }
+
+    function reset(){
+      ["c1","c2","c3","c4","c5","c6","c7"].forEach(id=>{
+        document.getElementById(id).innerText = 0;
+      });
+      document.getElementById("resultado").innerText = "Status do dia aparecerá aqui...";
+      document.getElementById("resumoParciais").innerHTML = "";
+    }
+
+    function checkGoals(){
+      let res = "";
+      res += "TASK: " + (parseInt(document.getElementById("c5").innerText)>=metas.c5 ? "✅" : "❌") + "<br>";
+      res += "MISSÃO: " + (parseInt(document.getElementById("c6").innerText)>=metas.c6 ? "✅" : "❌") + "<br>";
+      res += "DESAFIOS: " + (parseInt(document.getElementById("c7").innerText)>=metas.c7 ? "✅" : "❌") + "<br>";
+      res += "<br><button onclick='saveImage()'>📷 Gerar Imagem</button>";
+      document.getElementById("resultado").innerHTML = res;
+    }
+
+    function saveImage(){
+      html2canvas(document.getElementById("capture")).then(canvas=>{
+        let link = document.createElement('a');
+        link.download = 'relatorio.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+
+    function toggleDarkMode(){
+      document.body.classList.toggle("dark-mode");
+    }
+
+    function salvarParcial(horario){
+      let resumo = document.getElementById("resumoParciais");
+      resumo.innerHTML += `<p>${horario}: 🍺 ${c1.innerText}, 📦 ${c2.innerText}, 🛒 ${c3.innerText}, 📊 ${c4.innerText}</p>`;
+    }
+
+    function mostrarGrafico(){
+      const ctx = document.getElementById('graficoTarefas').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
