@@ -193,11 +193,4 @@
 
     function salvarParcial(horario){
       let resumo = document.getElementById("resumoParciais");
-      resumo.innerHTML += `<p>${horario}: 🍺 ${c1.innerText}, 📦 ${c2.innerText}, 🛒 ${c3.innerText}, 📊 ${c4.innerText}</p>`;
-    }
-
-    function mostrarGrafico(){
-      const ctx = document.getElementById('graficoTarefas').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
+      resumo.innerHTML += `<p>${horario}: 🍺 ${c1.innerText}, 📦 ${c2.innerText
