@@ -144,7 +144,7 @@
     <button onclick="mostrarGrafico()">📈 Ver Gráfico</button>
   </div>
 
-  <canvas id="graficoTarefas" style="max-width:100%; margin:20px auto; display:block;"></canvas>
+  <canvas id="graficoTarefas" style="max-width:100%; margin:20px auto; display:none;"></canvas>
 
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -167,6 +167,7 @@
       });
       document.getElementById("resultado").innerText = "Status do dia aparecerá aqui...";
       document.getElementById("resumoParciais").innerHTML = "";
+      document.getElementById("graficoTarefas").style.display = "none";
     }
 
     function checkGoals(){
@@ -193,4 +194,4 @@
 
     function salvarParcial(horario){
       let resumo = document.getElementById("resumoParciais");
-      resumo.innerHTML += `<p>${horario}: 🍺 ${c1.innerText}, 📦 ${c2.innerText
+      resumo.innerHTML += `<p>${horario}: 🍺 ${document.getElementById("c1").innerText}, 📦 ${document.getElementById("c2").innerText}, 🛒 ${document.getElementById("c3").innerText}, 📊 ${document.getElement
