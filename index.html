@@ -102,6 +102,7 @@ canvas {
 <button onclick="finalizar()">🏁 Finalizar</button>
 <button onclick="reset()">🔄 Reset</button>
 <button onclick="grafico()">📈 Gráfico</button>
+<button onclick="abrirForms()">📝 Forms</button>
 </div>
 
 <canvas id="chart" style="display:none;"></canvas>
@@ -110,11 +111,11 @@ canvas {
 
 const metas = {c5:35,c6:10,c7:10};
 
-// 🔥 DATA PADRÃO (CORRIGIDO)
+// DATA PADRÃO
 const hoje = new Date().toISOString().split('T')[0];
 document.getElementById("dataHoje").innerText = hoje;
 
-// 🔥 CARREGAR DADOS CORRETAMENTE
+// CARREGAR
 window.onload = () => {
   let banco = JSON.parse(localStorage.getItem("controle")) || {};
 
@@ -127,9 +128,11 @@ window.onload = () => {
   if(localStorage.getItem("dark")==="true"){
     document.body.classList.add("dark");
   }
+
+  pedirPermissao();
 }
 
-// 🔥 SALVAR COM HISTÓRICO
+// SALVAR
 function salvar(){
   let banco = JSON.parse(localStorage.getItem("controle")) || {};
   let dados = {};
@@ -139,7 +142,6 @@ function salvar(){
   });
 
   banco[hoje] = dados;
-
   localStorage.setItem("controle", JSON.stringify(banco));
 }
 
@@ -156,13 +158,11 @@ function add(id, somaTask=false){
   salvar();
 }
 
-// 🔥 RESET SÓ DO DIA ATUAL
+// RESET
 function reset(){
   if(confirm("Tem certeza?")){
-
     let banco = JSON.parse(localStorage.getItem("controle")) || {};
     delete banco[hoje];
-
     localStorage.setItem("controle", JSON.stringify(banco));
 
     ["c1","c2","c3","c4","c5","c6","c7"].forEach(id=>{
@@ -231,7 +231,48 @@ function grafico(){
   });
 }
 
-// 🔥 REGISTRAR SERVICE WORKER (APP OFFLINE)
+// 🔗 ABRIR FORMS
+function abrirForms(){
+  window.open("https://docs.google.com/forms/d/e/1FAIpQLSeS9OY-okFbDn9Ivn-sFT6mk_p20v1B6TWPh7Bmu0gkkecP6Q/viewform", "_blank");
+}
+
+// 🔔 NOTIFICAÇÕES
+function pedirPermissao(){
+  if(Notification.permission !== "granted"){
+    Notification.requestPermission();
+  }
+}
+
+function notificar(msg){
+  if(Notification.permission === "granted"){
+    new Notification(msg);
+  }
+}
+
+function verificarHorario(){
+
+  const agora = new Date();
+  const dia = agora.getDay();
+
+  if(dia >= 1 && dia <= 5){
+
+    const hora = agora.getHours();
+    const minuto = agora.getMinutes();
+
+    if(hora === 11 && minuto === 55){
+      notificar("⏰ Enviar relatório das 12h!");
+    }
+
+    if(hora === 14 && minuto === 55){
+      notificar("⏰ Enviar relatório das 15h!");
+    }
+  }
+}
+
+// roda a cada 30s
+setInterval(verificarHorario, 30000);
+
+// SERVICE WORKER
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
